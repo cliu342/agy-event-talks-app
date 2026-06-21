@@ -25,6 +25,7 @@ const elements = {
     searchInput: document.getElementById('search-input'),
     btnClearSearch: document.getElementById('btn-clear-search'),
     categoryFilters: document.getElementById('category-filters'),
+    btnExportCSV: document.getElementById('btn-export-csv'),
     
     // Feed States
     feedContainer: document.getElementById('feed-container'),
@@ -58,6 +59,9 @@ function initEventListeners() {
     // Refresh buttons
     elements.btnRefresh.addEventListener('click', () => fetchReleaseNotes(true));
     elements.btnRetry.addEventListener('click', () => fetchReleaseNotes(true));
+    
+    // CSV Export Button
+    elements.btnExportCSV.addEventListener('click', exportToCSV);
     
     // Category Filter pills
     elements.categoryFilters.addEventListener('click', (e) => {
@@ -237,7 +241,14 @@ function renderFeed() {
                 <div class="card-content">
                     ${note.html}
                 </div>
-                <div class="card-footer">
+                <div class="card-footer" style="display: flex; gap: 0.55rem; justify-content: flex-end; width: 100%;">
+                    <button class="btn-copy-clipboard" title="Copy text to clipboard">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span>Copy</span>
+                    </button>
                     <button class="btn-select-tweet">
                         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 20h9"></path>
@@ -247,6 +258,13 @@ function renderFeed() {
                     </button>
                 </div>
             `;
+            
+            // Bind Copy click event
+            const btnCopy = card.querySelector('.btn-copy-clipboard');
+            btnCopy.addEventListener('click', (e) => {
+                e.stopPropagation(); // Stop click from selecting card
+                copyCardToClipboard(note, card);
+            });
             
             // Add click interaction to select card
             card.addEventListener('click', (e) => {
@@ -423,4 +441,86 @@ function showError(isError) {
         elements.feedContainer.innerHTML = '';
         elements.emptyState.style.display = 'none';
     }
+}
+
+// --- Copy Card Content to Clipboard ---
+function copyCardToClipboard(note, cardElement) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = note.html;
+    let plainText = tempDiv.textContent || tempDiv.innerText || "";
+    plainText = plainText.replace(/\s+/g, ' ').trim();
+    
+    const sourceLink = note.link || 'https://docs.cloud.google.com/bigquery/docs/release-notes';
+    const clipboardText = `BigQuery Release Note - ${note.category} (${note.date})\n\n${plainText}\n\nSource: ${sourceLink}`;
+    
+    const btn = cardElement.querySelector('.btn-copy-clipboard');
+    const btnSpan = btn.querySelector('span');
+    
+    navigator.clipboard.writeText(clipboardText).then(() => {
+        btn.classList.add('copied');
+        btnSpan.textContent = 'Copied!';
+        
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            btnSpan.textContent = 'Copy';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        alert('Failed to copy to clipboard. Please try manually selecting the text.');
+    });
+}
+
+// --- Export Filtered Notes to CSV ---
+function exportToCSV() {
+    if (state.filteredNotes.length === 0) {
+        alert('There are no updates matching your current filters to export.');
+        return;
+    }
+    
+    // Helper to format values for CSV, enclosing in double quotes and escaping inner quotes
+    const escapeCSVField = (val) => {
+        if (val === null || val === undefined) return '""';
+        const str = String(val).replace(/"/g, '""');
+        return `"${str}"`;
+    };
+    
+    // CSV Header row
+    let csvContent = 'ID,Date,Category,Link,Content\r\n';
+    
+    state.filteredNotes.forEach(note => {
+        // Extract clean plain text for the content column (strip HTML tags)
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = note.html;
+        let plainContent = tempDiv.textContent || tempDiv.innerText || "";
+        plainContent = plainContent.replace(/\s+/g, ' ').trim();
+        
+        const row = [
+            note.id,
+            note.date,
+            note.category,
+            note.link,
+            plainContent
+        ].map(escapeCSVField).join(',');
+        
+        csvContent += row + '\r\n';
+    });
+    
+    // Create download trigger
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    
+    // Generate filename based on filters
+    const categorySuffix = state.activeCategory !== 'all' ? `_${state.activeCategory}` : '';
+    const searchSuffix = state.searchQuery ? `_filtered` : '';
+    const dateStamp = new Date().toISOString().slice(0, 10);
+    const filename = `bigquery_release_notes_${dateStamp}${categorySuffix}${searchSuffix}.csv`;
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 }

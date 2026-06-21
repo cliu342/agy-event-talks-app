@@ -254,6 +254,15 @@ body {
     color: #fff;
 }
 
+.filter-group-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 100%;
+}
+
 .filter-group {
     display: flex;
     align-items: center;
@@ -481,7 +490,7 @@ body {
 }
 
 /* Action button inside card */
-.btn-select-tweet {
+.btn-select-tweet, .btn-copy-clipboard {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -496,10 +505,16 @@ body {
     transition: var(--transition-smooth);
 }
 
-.btn-select-tweet:hover {
+.btn-select-tweet:hover, .btn-copy-clipboard:hover {
     border-color: var(--color-primary);
     color: #fff;
     background: rgba(59, 130, 246, 0.06);
+}
+
+.btn-copy-clipboard.copied {
+    border-color: var(--color-feature);
+    color: #fff;
+    background: var(--color-feature-bg);
 }
 
 .release-card.selected .btn-select-tweet {

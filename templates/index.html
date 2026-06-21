@@ -75,16 +75,26 @@
                 <input type="text" id="search-input" placeholder="Search keywords (e.g. Gemini, UDF, Iceberg)..." autocomplete="off">
                 <button id="btn-clear-search" class="btn-clear" style="display: none;">&times;</button>
             </div>
-            <div class="filter-group">
-                <span class="filter-title">Filter Category:</span>
-                <div class="filter-pills" id="category-filters">
-                    <button class="pill active" data-category="all">All</button>
-                    <button class="pill" data-category="feature">Feature</button>
-                    <button class="pill" data-category="announcement">Announcement</button>
-                    <button class="pill" data-category="issue">Issue</button>
-                    <button class="pill" data-category="change">Change</button>
-                    <button class="pill" data-category="breaking">Breaking</button>
+            <div class="filter-group-row">
+                <div class="filter-group">
+                    <span class="filter-title">Filter Category:</span>
+                    <div class="filter-pills" id="category-filters">
+                        <button class="pill active" data-category="all">All</button>
+                        <button class="pill" data-category="feature">Feature</button>
+                        <button class="pill" data-category="announcement">Announcement</button>
+                        <button class="pill" data-category="issue">Issue</button>
+                        <button class="pill" data-category="change">Change</button>
+                        <button class="pill" data-category="breaking">Breaking</button>
+                    </div>
                 </div>
+                <button id="btn-export-csv" class="btn btn-secondary btn-export" title="Export current filtered list to CSV">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Export CSV</span>
+                </button>
             </div>
         </section>
 
