@@ -39,6 +39,53 @@
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.15);
+    /* Component-specific */
+    --input-bg: rgba(0, 0, 0, 0.25);
+    --code-bg: rgba(0, 0, 0, 0.3);
+    --code-color: #e5e7eb;
+    --code-border: rgba(255, 255, 255, 0.05);
+    --pill-bg: rgba(255, 255, 255, 0.04);
+    --pill-hover-bg: rgba(255, 255, 255, 0.08);
+    --tweet-preview-bg: #15181c;
+    --tweet-preview-text: #eff3f4;
+    --scrollbar-track: var(--bg-dark);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.2);
+    --heading-gradient-start: #fff;
+    --heading-gradient-end: #9ca3af;
+    --stat-num-color: #fff;
+    --glow-opacity: 1;
+}
+
+/* --- Light Mode Override --- */
+body.light-mode {
+    --bg-dark: #f0f2f5;
+    --bg-surface: rgba(255, 255, 255, 0.85);
+    --bg-surface-hover: rgba(255, 255, 255, 0.95);
+    --bg-surface-active: rgba(240, 242, 245, 1);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --border-hover: rgba(0, 0, 0, 0.18);
+
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --text-muted: #6b7280;
+
+    --input-bg: rgba(0, 0, 0, 0.04);
+    --code-bg: rgba(0, 0, 0, 0.06);
+    --code-color: #1e293b;
+    --code-border: rgba(0, 0, 0, 0.08);
+    --pill-bg: rgba(0, 0, 0, 0.04);
+    --pill-hover-bg: rgba(0, 0, 0, 0.08);
+    --tweet-preview-bg: #f7f9f9;
+    --tweet-preview-text: #0f1419;
+    --scrollbar-track: #f0f2f5;
+    --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+    --scrollbar-thumb-hover: rgba(0, 0, 0, 0.22);
+    --heading-gradient-start: #111827;
+    --heading-gradient-end: #4b5563;
+    --stat-num-color: #111827;
+    --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.1);
+    --glow-opacity: 0;
 }
 
 /* --- Base Resets & Layout --- */
@@ -67,6 +114,7 @@ body {
     background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(99, 102, 241, 0.02) 50%, transparent 100%);
     filter: blur(80px);
     z-index: -10;
+    opacity: var(--glow-opacity);
     pointer-events: none;
 }
 
@@ -119,7 +167,7 @@ body {
     font-size: 1.75rem;
     font-weight: 700;
     letter-spacing: -0.025em;
-    background: linear-gradient(to right, #fff, #9ca3af);
+    background: linear-gradient(to right, var(--heading-gradient-start), var(--heading-gradient-end));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -177,7 +225,7 @@ body {
     font-family: 'Outfit', sans-serif;
     font-size: 1.85rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--stat-num-color);
 }
 
 .stat-label {
@@ -222,7 +270,7 @@ body {
 
 .search-box input {
     width: 100%;
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--input-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 0.85rem 1.25rem 0.85rem 3rem;
@@ -285,7 +333,7 @@ body {
 }
 
 .pill {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--pill-bg);
     border: 1px solid var(--border-color);
     border-radius: 9999px;
     padding: 0.45rem 1.1rem;
@@ -297,7 +345,7 @@ body {
 }
 
 .pill:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--pill-hover-bg);
     color: #fff;
     border-color: var(--border-hover);
 }
@@ -451,13 +499,13 @@ body {
 }
 
 .card-content code {
-    background: rgba(0, 0, 0, 0.3);
-    color: #e5e7eb;
+    background: var(--code-bg);
+    color: var(--code-color);
     padding: 0.15rem 0.4rem;
     border-radius: 4px;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.85em;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--code-border);
 }
 
 .card-content a {
@@ -699,7 +747,7 @@ body {
 }
 
 .tweet-preview-bubble {
-    background: #15181c; /* Simulated X dark mode card */
+    background: var(--tweet-preview-bg);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     padding: 1.25rem;
@@ -744,7 +792,7 @@ body {
 .tweet-preview-text {
     font-size: 0.9rem;
     line-height: 1.5;
-    color: #eff3f4;
+    color: var(--tweet-preview-text);
     white-space: pre-wrap;
     word-break: break-word;
 }
@@ -847,16 +895,42 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bg-dark);
+    background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--scrollbar-thumb);
     border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* --- Theme Toggle Button --- */
+.btn-theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--pill-bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.btn-theme-toggle:hover {
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+    background: var(--pill-hover-bg);
+    transform: rotate(15deg);
+}
+
+body.light-mode .btn-theme-toggle {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* Mobile Responsiveness */

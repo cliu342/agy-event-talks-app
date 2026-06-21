@@ -45,11 +45,17 @@ const elements = {
     charProgress: document.getElementById('char-progress'),
     charWarning: document.getElementById('char-warning'),
     tweetPreviewText: document.getElementById('tweet-preview-text'),
-    btnShareTweet: document.getElementById('btn-share-tweet')
+    btnShareTweet: document.getElementById('btn-share-tweet'),
+    
+    // Theme Toggle
+    btnThemeToggle: document.getElementById('btn-theme-toggle'),
+    themeSunIcon: document.getElementById('theme-sun-icon'),
+    themeMoonIcon: document.getElementById('theme-moon-icon')
 };
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
+    restoreTheme();
     initEventListeners();
     fetchReleaseNotes(false);
 });
@@ -62,6 +68,9 @@ function initEventListeners() {
     
     // CSV Export Button
     elements.btnExportCSV.addEventListener('click', exportToCSV);
+    
+    // Theme Toggle
+    elements.btnThemeToggle.addEventListener('click', toggleTheme);
     
     // Category Filter pills
     elements.categoryFilters.addEventListener('click', (e) => {
@@ -523,4 +532,26 @@ function exportToCSV() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+}
+
+// --- Theme Toggle ---
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-mode');
+    updateThemeIcons(isLight);
+    localStorage.setItem('bq-release-hub-theme', isLight ? 'light' : 'dark');
+}
+
+function restoreTheme() {
+    const savedTheme = localStorage.getItem('bq-release-hub-theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        updateThemeIcons(true);
+    }
+}
+
+function updateThemeIcons(isLight) {
+    // In dark mode: show Sun icon (to switch to light)
+    // In light mode: show Moon icon (to switch to dark)
+    elements.themeSunIcon.style.display = isLight ? 'none' : 'block';
+    elements.themeMoonIcon.style.display = isLight ? 'block' : 'none';
 }
